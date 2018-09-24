@@ -11,8 +11,9 @@ const dbConfig = require('./config/database');
 const app = express();
 
 // Load routes controller
-const ideas = require("./routes/ideasController");
-const users = require("./routes/usersController");
+const ideasController = require("./routes/ideasController");
+const usersController = require("./routes/usersController");
+const productsController = require("./routes/productsController");
 
 // Passport config
 require("./config/passport")(passport);
@@ -28,9 +29,6 @@ mongoose.connect(dbConfig.mongoURI, (err) =>{
       console.log('Error in DB connection :' + JSON.stringify(err, undefined, 2));
 });
 
-// Load Idea model
-// require("./models/Idea");
-// const Idea = mongoose.model("ideas");
 
 // Handlebars middleware
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
@@ -67,9 +65,18 @@ app.use(function(req, res, next) {
   next();
 });
 
+//Port For the Application
+const port = 3000 || process.env.port;
+
+app.listen(port, () => {
+  console.log('The server is live on http://127.0.0.1:3000/');
+});
+
+
+//All Routes
 // Index route
 app.get("/", (req, res) => {
-  const title = "Welcome";
+  const title = "Welcome To ECL E-Commerce";
   res.render("index", {
     title: title
   });
@@ -80,13 +87,8 @@ app.get("/about", (req, res) => {
   res.render("about");
 });
 
-
 // Use routes
-app.use("/ideas", ideas);
-app.use("/users", users);
+app.use("/ideas", ideasController);
+app.use("/users", usersController);
+app.use("/products", productsController);
 
-const port = 3000 || process.env.port;
-
-app.listen(port, () => {
-  console.log('The server is live on http://127.0.0.1:3000/');
-});

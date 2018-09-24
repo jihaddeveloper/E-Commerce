@@ -1,0 +1,32 @@
+<div class="cotainer-fluid" style="margin-top:20px;">
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <div class="card card-body">
+                <h3 class="text-center">Product Registration</h3>
+                <form action="/products/register" method="POST">
+                    <div class="form-group">
+                        <label for="title">Title</label>
+                        <input type="text" name="title" class="form-control" value="{{title}}" placeholder="Product's name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="category">Category</label>
+                        <input type="text" name="category" class="form-control" value="{{category}}" placeholder="Product's type" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Price</label>
+                        <input type="number" name="price" class="form-control" value="{{price}}" placeholder="Product's unit price" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <input type="text" name="description" class="form-control" value="{{description}}" placeholder="description" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="image">Image</label>
+                        <input type="text" name="image" class="form-control" value="{{image}}" placeholder="Images" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

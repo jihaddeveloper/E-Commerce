@@ -1,5 +1,81 @@
-<div class="jumbotron text-center">
-    <h1 class="display-3">{{title}}</h1>
-    <p class="lead">Idea for you next blog</p>
-    <a href="/ideas/add" class="btn btn-dark btn-lg">Add blog idea</a>
+<h1 class="display-3">{{title}}</h1>
+<div class="container-fluid" style="width:80%;min-height: 700px">
+    <h1 style="margin: auto">{{category}}</a></h1>
+    <div class="row" >
+        {{!-- Filter option shows  --}}
+        <div class="col-sm-3 " >
+            <Div class="well">
+
+                
+                    <label for="priceRange">Price Range:</label>
+                    <div class="radio">
+                        <label><input type="radio" name="priceRange" >80K-100K</label>
+                    </div>
+                    <div class="radio">
+                        <label><input type="radio" name="priceRange">60K-79K</label>
+                    </div>
+                    <div class="radio ">
+                        <label><input type="radio" name="priceRange" >30K-59K</label>
+                    </div> 
+                    <div class="radio ">
+                        <label><input type="radio" name="priceRange" >10K-29K</label>
+                    </div> 
+                    <div class="radio ">
+                        <label><input type="radio" name="priceRange" >1K-9K</label>
+                    </div> 
+              <hr>
+
+                
+                    <label for="filterByColor">Color:</label>
+                    <div class="radio">
+                        <label><input type="radio" name="filterByColor" >Red</label>
+                    </div>
+                    <div class="radio">
+                        <label><input type="radio" name="filterByColor">Blue</label>
+                    </div>
+                    <div class="radio ">
+                        <label><input type="radio" name="filterByColor" >Black</label>
+                    </div> 
+                    <div class="radio ">
+                        <label><input type="radio" name="filterByColor" >Gray</label>
+                    </div> 
+                    <div class="radio ">
+                        <label><input type="radio" name="filterByColor" >Pink</label>
+                    </div> 
+                </Div>
+
+            
+
+        </div>
+
+        {{!-- products shows --}}
+        <div class="col-sm-9 " >
+         
+
+                {{# each products  }}
+                <div class="row" >
+
+                    {{# each this}}
+                    <div class="col-sm-6 col-md-4" >
+                        <div class="thumbnail" >
+                            <img class="img-responsive" src="" alt="" >
+                            <div class="caption">
+                                <h3>{{ this.title}}</h3>
+                                <p class="description">{{ this.description }}</p>
+                                <div class="clearfix">
+                                    <div class="price pull-left">{{ this.price }} TK</div>
+                                    <a href="/add-to-cart/{{ this._id }}" class="btn btn-default pull-right" role="button">Add to Cart</a> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{/each}} 
+
+                </div>
+                {{/each}} 
+
+           
+        </div>
+
+    </div>
 </div>
