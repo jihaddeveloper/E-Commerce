@@ -1,13 +1,13 @@
 {
-  "name": "blogidea",
+  "name": "e-commerce",
   "version": "1.0.0",
-  "description": "Application to store the ideas of blog topics.",
+  "description": "E-Commerce Application",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js"
   },
-  "author": "Subha",
+  "author": "Jihad",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -26,7 +26,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Fathma/bidea"
+    "url": "https://github.com/jihaddeveloper/e-commerce"
   },
   "engines": {
     "node": "8.11.4"

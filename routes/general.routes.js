@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
-var product = require('../models/product.model')
+//var product = require('../models/product.model')
 var Cart = require('../models/cart.model');
+const product = require('../models/Product');
 
 
 
@@ -10,19 +11,21 @@ var Cart = require('../models/cart.model');
 // Require the controllers WHICH WE DID NOT CREATE YET!!
 
 
-// router.get('/abcd',function(req,res,next){
+router.get('/abcd',function(req,res,next){
     
-//     //getting form data
-//     var productt = new product({
-//         imagePath: "/images/10.jpg",
-//         title: "mobile3",
-//         description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum incidunt, quidem dolores natus corporis beatae soluta sapiente iste sed repellat expedita modi cumque pariatur libero sit! Qui voluptates laudantium laborum?",
-//         price: 1000,
-//         category: 'mobile'
-//     });
-//     productt.save();
+    //getting form data
+    var newProduct = new Product({
+        title: "mobile3",
+        category: 'mobile',
+        price: 1000,
+        description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum incidunt, quidem dolores natus corporis beatae soluta sapiente iste sed repellat expedita modi cumque pariatur libero sit! Qui voluptates laudantium laborum?",
+        image: "/images/10.jpg",
+        user: "1431434234"
+    });
+    newProduct.save();
     
-// });
+});
+
 router.get('/profile',function(req,res,next){
     resultArrayLaptop=[];
     resultArrayMobile=[];
