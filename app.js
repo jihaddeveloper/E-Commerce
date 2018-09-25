@@ -7,6 +7,8 @@ const flash = require("connect-flash");
 const session = require("express-session");
 const passport = require("passport");
 const dbConfig = require('./config/database');
+var path = require('path');
+var mongoStore = require('connect-mongo')(session);
 
 const app = express();
 
@@ -14,6 +16,7 @@ const app = express();
 const ideasController = require("./routes/ideasController");
 const usersController = require("./routes/usersController");
 const productsController = require("./routes/productsController");
+var general = require('./routes/general.routes');
 
 // Passport config
 require("./config/passport")(passport);
@@ -37,18 +40,19 @@ app.set("view engine", "handlebars");
 // Body parser middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Method overriding middleware
 app.use(methodOverride("_method"));
 
 // Express session middleware
-app.use(
-  session({
-    secret: "secret",
-    resave: true,
-    saveUninitialized: true
-  })
-);
+app.use(session({
+  secret: 'mysecret', 
+  resave: false, 
+  saveUninitialized: false,
+  store: new mongoStore({ mongooseConnection: mongoose.connection }),
+  cookie: { maxAge: 180*60*1000 }
+}));
 
 // Passport middleware
 app.use(passport.initialize());
@@ -62,6 +66,11 @@ app.use(function(req, res, next) {
   res.locals.error_msg = req.flash("error_msg");
   res.locals.error = req.flash("error");
   res.locals.user = req.user || null;
+  next();
+});
+
+app.use(function(req, res, next){
+  res.locals.session = req.session;
   next();
 });
 
@@ -88,6 +97,7 @@ app.get("/about", (req, res) => {
 });
 
 // Use routes
+app.use('', general);
 app.use("/ideas", ideasController);
 app.use("/users", usersController);
 app.use("/products", productsController);
