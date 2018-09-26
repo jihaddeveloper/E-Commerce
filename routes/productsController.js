@@ -1,6 +1,12 @@
 //Imports
 const express = require("express");
 const router = express.Router();
+const multer = require('multer');
+const path = require('path');
+const crypto = require('crypto');
+const GridFsStorage = require('multer-gridfs-storage');
+const Gird = require('gridfs-stream');
+const methodOverride = require('method-override');
 const {ensureAuthenticated} = require("../helpers/auth");
 
 

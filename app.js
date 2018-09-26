@@ -7,8 +7,10 @@ const flash = require("connect-flash");
 const session = require("express-session");
 const passport = require("passport");
 const dbConfig = require('./config/database');
+const morgan = require('morgan');
 var path = require('path');
 var mongoStore = require('connect-mongo')(session);
+
 
 const app = express();
 
@@ -32,6 +34,8 @@ mongoose.connect(dbConfig.mongoURI, (err) =>{
       console.log('Error in DB connection :' + JSON.stringify(err, undefined, 2));
 });
 
+//Dev tools
+app.use(morgan('dev'));//Morgan to see Routes in shell/command/bash. 
 
 // Handlebars middleware
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
@@ -87,11 +91,13 @@ app.listen(port, () => {
 //All Routes
 // Index route
 app.get("/", (req, res) => {
-  const title = "Welcome To ECL E-Commerce";
-  res.render("index", {
-    title: title
-  });
+  res.redirect('/profile');
+  // const title = "Welcome To ECL E-Commerce";
+  // res.render("home", {
+  //   title: title
+  // });
 });
+
 
 // About route
 app.get("/about", (req, res) => {
