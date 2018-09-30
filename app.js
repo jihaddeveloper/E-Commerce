@@ -91,7 +91,7 @@ app.listen(port, () => {
 //All Routes
 // Index route
 app.get("/", (req, res) => {
-  res.redirect('/profile');
+  res.redirect('/home');
   // const title = "Welcome To ECL E-Commerce";
   // res.render("home", {
   //   title: title

@@ -1,14 +1,20 @@
 //Imports
 const express = require("express");
 const router = express.Router();
-const multer = require('multer');
-const path = require('path');
-const crypto = require('crypto');
-const GridFsStorage = require('multer-gridfs-storage');
-const Gird = require('gridfs-stream');
-const methodOverride = require('method-override');
 const {ensureAuthenticated} = require("../helpers/auth");
 
+
+var multer = require('multer');
+const storage = multer.diskStorage({
+    destination: function(req, file, cb){
+        cb(null, './public/images/');
+    },
+    filename: function(req, file, cb){
+        cb(null, file.originalname);
+    }
+});
+
+const upload = multer({storage: storage});
 
 // Load Idea model
 const Product = require("../models/Product");
@@ -19,39 +25,35 @@ router.get("/register", ensureAuthenticated, (req, res) => {
 });
 
 //Product register process
-router.post("/register", ensureAuthenticated, (req, res) => {
+router.post("/registerSave", ensureAuthenticated, upload.single('product_img'), (req, res) => {
     let errors = [];
-
+   
     if (!req.body.title) {
         errors.push({
             text: "Please add a title"
         });
     }
-
+  
     if (!req.body.category) {
         errors.push({
             text: "Please add a category"
         });
     }
-
+  
     if (!req.body.price) {
         errors.push({
             text: "Please add a price"
         });
     }
-
+  
     if (!req.body.description) {
         errors.push({
             text: "Please add some description"
         });
     }
-
-    if (!req.body.image) {
-        errors.push({
-            text: "Please add image"
-        });
-    }
-
+  
+   
+  
     if (errors.length > 0) {
         res.render("products/register", {
             errors: errors,
@@ -59,7 +61,7 @@ router.post("/register", ensureAuthenticated, (req, res) => {
             category: req.body.category,
             price: req.body.price,
             description: req.body.description,
-            image:req.body.image
+            imagePath:req.body.product_img
         });
     } else {
         const newProduct = {
@@ -67,15 +69,15 @@ router.post("/register", ensureAuthenticated, (req, res) => {
             category: req.body.category,
             price: req.body.price,
             description: req.body.description,
-            image: req.body.image,
+            imagePath: '/images/'+req.file.originalname,
             user: req.user.id
         };
         new Product(newProduct).save().then(product => {
             req.flash("success_msg", "Product added.");
-            res.redirect("/");
+            res.redirect("/home");
         });
     }
-});
+  });
 
 // saving data in product schema
 router.get('/category/:category',function(req,res,next){
