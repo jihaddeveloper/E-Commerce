@@ -88,14 +88,9 @@ app.listen(port, () => {
 });
 
 
-//All Routes
-// Index route
+
 app.get("/", (req, res) => {
   res.redirect('/home');
-  // const title = "Welcome To ECL E-Commerce";
-  // res.render("home", {
-  //   title: title
-  // });
 });
 
 
@@ -106,7 +101,6 @@ app.get("/about", (req, res) => {
 
 // Use routes
 app.use('', general);
-
 app.use("/users", usersController);
 app.use("/products", productsController);
 

@@ -1,23 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const passport = require("passport");
-var product = require("../models/product.model");
+var product = require("../models/Product");
 var Cart = require("../models/cart.model");
 
-// Require the controllers WHICH WE DID NOT CREATE YET!!
 
-// router.get('/abcd',function(req,res,next){
-
-//     //getting form data
-//     var productt = new product({
-//         imagePath: "/images/10.jpg",
-//         title: "mobile3",
-//         description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum incidunt, quidem dolores natus corporis beatae soluta sapiente iste sed repellat expedita modi cumque pariatur libero sit! Qui voluptates laudantium laborum?",
-//         price: 1000,
-//         category: 'mobile'
-//     });
-//     productt.save();
-// });
 
 
 // returns home page 
@@ -25,11 +12,13 @@ router.get("/home", function(req, res, next) {
   resultArrayLaptop = [];
   resultArrayMobile = [];
   resultArrayCamera = [];
+  resultArrayPinned = [];
   rev_resultArrayLaptop = [];
   rev_resultArrayMobile = [];
   rev_resultArrayCamera = [];
+  rev_resultArrayPinned = [];
 
-
+  //gets three latest uploaded laptop  
   product.find({ category: "laptop" }, function(err, docs) {
     for (var i = docs.length-1; i > -1; i -= 1) {    
       resultArrayLaptop.push(docs[i]);
@@ -40,6 +29,19 @@ router.get("/home", function(req, res, next) {
     }
   })
   .then(()=>{
+    //gets three latest uploaded mobile 
+    product.find({ pinned: "true" }, function(err, docs) {
+      for (var i = docs.length-1; i > -1; i -= 1) {    
+        resultArrayPinned.push(docs[i]);
+      }
+      for (var i = 0; i < resultArrayPinned.length; i += 3) {    
+        rev_resultArrayPinned.push(resultArrayPinned.slice(i,i+3));
+        break;
+      }
+    });
+  })
+  .then(()=>{
+    //gets three latest uploaded mobile 
     product.find({ category: "mobile" }, function(err, docs) {
       for (var i = docs.length-1; i > -1; i -= 1) {    
         resultArrayMobile.push(docs[i]);
@@ -51,6 +53,7 @@ router.get("/home", function(req, res, next) {
     });
   })
   .then(()=>{
+    //gets three latest uploaded camera 
     product.find({ category: "camera" }, function(err, docs) {
       for (var i = docs.length-1; i > -1; i -= 1) {    
         resultArrayCamera.push(docs[i]);
@@ -64,6 +67,7 @@ router.get("/home", function(req, res, next) {
   .then(()=>{
     res.render("home", {
       title: "general",
+      productsPinned: rev_resultArrayPinned,
       productsLaptops: rev_resultArrayLaptop,
       productsMobiles: rev_resultArrayMobile,
       productsCameras: rev_resultArrayCamera
@@ -71,15 +75,18 @@ router.get("/home", function(req, res, next) {
   })
 });
 
-router.get("/add-to-cart/:id", function(req, res, next) {
+// Adding product to the cart
+router.post("/add-to-cart/:id", function(req, res, next) {
   var productId = req.params.id;
+  var quantity = parseInt(req.body.qoqo,10);
+  console.log(typeof(quantity));
   var cart = new Cart(req.session.cart ? req.session.cart : {});
 
   product.findById(productId, function(err, product) {
     if (err) {
       return res.redirect("/singleProduct/"+productId);
     }
-    cart.add(product, productId);
+    cart.add(product, productId, quantity);
     req.session.cart = cart;
 
     res.redirect("/singleProduct/"+productId);
@@ -102,6 +109,24 @@ router.get("/reduce/:_id", function(req, res, next) {
     res.redirect("/cartView");
   });
 });
+
+router.get("/increase/:_id", function(req, res, next) {
+  var productId = req.params._id;
+  var cart = new Cart(req.session.cart ? req.session.cart : {});
+
+  product.findById(productId, function(err, product) {
+    if (err) {
+      return res.redirect("/cartView");
+    }
+
+    cart.increase(product, productId);
+
+    req.session.cart = cart;
+
+    res.redirect("/cartView");
+  });
+});
+
 router.get("/removeAll/:_id", function(req, res, next) {
   var productId = req.params._id;
   var cart = new Cart(req.session.cart ? req.session.cart : {});

@@ -13,9 +13,18 @@
                 <h2>{{ product.title }}</h2>
                 <p class="description">Details:{{ product.description }}</p>
                 <div class="clearfix">
-                    <div class="price pull-left">Price: {{ product.price }} TK</div>
-                    <a href="/add-to-cart/{{ product._id }}" class="btn btn-default pull-right" role="button">Add to
-                        Cart</a>
+                    <h3>Price: {{ product.price }} TK</h3>
+
+                    <form action="/add-to-cart/{{ product._id }}" method="POST">
+                        <div class="qoqo pull-left">
+                            <label for="qoqo">
+                                <h4>Quantity:</h4>
+                            </label>
+                            <input type="number" class="form-group" name="qoqo" min="1" value="1" style="width: 70px;">
+                        </div>
+
+                        <input class="btn btn-default pull-right" type="submit" value="Add to cart" />
+                    </form>
                 </div>
             </div>
         </div>
