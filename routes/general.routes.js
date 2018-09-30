@@ -25,28 +25,43 @@ router.get("/home", function(req, res, next) {
   resultArrayLaptop = [];
   resultArrayMobile = [];
   resultArrayCamera = [];
+  rev_resultArrayLaptop = [];
+  rev_resultArrayMobile = [];
+  rev_resultArrayCamera = [];
 
   product.find({ category: "laptop" }, function(err, docs) {
-    for (var i = 0; i < 3; i += 3) {
-      resultArrayLaptop.push(docs.slice(i, i + 3));
+    for (var i = docs.length-1; i > -1; i -= 1) {    
+      resultArrayLaptop.push(docs[i]);
+    }
+    for (var i = 0; i < resultArrayLaptop.length; i += 3) {    
+      rev_resultArrayLaptop.push(resultArrayLaptop.slice(i,i+3));
+      break;
     }
   });
   product.find({ category: "mobile" }, function(err, docs) {
-    for (var i = 0; i < 3; i += 3) {
-      resultArrayMobile.push(docs.slice(i, i + 3));
+    for (var i = docs.length-1; i > -1; i -= 1) {    
+      resultArrayMobile.push(docs[i]);
+    }
+    for (var i = 0; i < resultArrayMobile.length; i += 3) {    
+      rev_resultArrayMobile.push(resultArrayMobile.slice(i,i+3));
+      break;
     }
   });
   product.find({ category: "camera" }, function(err, docs) {
-    for (var i = 0; i < 3; i += 3) {
-      resultArrayCamera.push(docs.slice(i, i + 3));
+    for (var i = docs.length-1; i > -1; i -= 1) {    
+      resultArrayCamera.push(docs[i]);
+    }
+    for (var i = 0; i < resultArrayCamera.length; i += 3) {    
+      rev_resultArrayCamera.push(resultArrayCamera.slice(i,i+3));
+      break;
     }
   });
 
   res.render("home", {
     title: "general",
-    productsLaptops: resultArrayLaptop,
-    productsMobiles: resultArrayMobile,
-    productsCameras: resultArrayCamera
+    productsLaptops: rev_resultArrayLaptop,
+    productsMobiles: rev_resultArrayMobile,
+    productsCameras: rev_resultArrayCamera
   });
 });
 
@@ -108,15 +123,21 @@ router.get("/cartView", function(req, res, next) {
 
 router.get("/FilteredByCategory/:category", function(req, res, next) {
   resultArray = [];
+  rev_resultArray = [];
   product.find({ category: req.params.category }, function(err, docs) {
-    for (var i = 0; i < docs.length; i += 3) {
-      resultArray.push(docs.slice(i, i + 3));
+    
+    for (var i = docs.length-1; i > -1; i -= 1) {    
+      resultArray.push(docs[i]);
     }
+    for (var i = 0; i < resultArray.length; i += 3) {    
+      rev_resultArray.push(resultArray.slice(i,i+3));
+    }
+
 
     res.render("categoryWise", {
       title: "general",
       category: req.params.category,
-      products: resultArray
+      products: rev_resultArray
     });
   });
 });
