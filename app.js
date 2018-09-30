@@ -106,7 +106,7 @@ app.get("/about", (req, res) => {
 
 // Use routes
 app.use('', general);
-app.use("/ideas", ideasController);
+
 app.use("/users", usersController);
 app.use("/products", productsController);
 
