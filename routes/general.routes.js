@@ -29,6 +29,7 @@ router.get("/home", function(req, res, next) {
   rev_resultArrayMobile = [];
   rev_resultArrayCamera = [];
 
+
   product.find({ category: "laptop" }, function(err, docs) {
     for (var i = docs.length-1; i > -1; i -= 1) {    
       resultArrayLaptop.push(docs[i]);
@@ -37,32 +38,37 @@ router.get("/home", function(req, res, next) {
       rev_resultArrayLaptop.push(resultArrayLaptop.slice(i,i+3));
       break;
     }
-  });
-  product.find({ category: "mobile" }, function(err, docs) {
-    for (var i = docs.length-1; i > -1; i -= 1) {    
-      resultArrayMobile.push(docs[i]);
-    }
-    for (var i = 0; i < resultArrayMobile.length; i += 3) {    
-      rev_resultArrayMobile.push(resultArrayMobile.slice(i,i+3));
-      break;
-    }
-  });
-  product.find({ category: "camera" }, function(err, docs) {
-    for (var i = docs.length-1; i > -1; i -= 1) {    
-      resultArrayCamera.push(docs[i]);
-    }
-    for (var i = 0; i < resultArrayCamera.length; i += 3) {    
-      rev_resultArrayCamera.push(resultArrayCamera.slice(i,i+3));
-      break;
-    }
-  });
-
-  res.render("home", {
-    title: "general",
-    productsLaptops: rev_resultArrayLaptop,
-    productsMobiles: rev_resultArrayMobile,
-    productsCameras: rev_resultArrayCamera
-  });
+  })
+  .then(()=>{
+    product.find({ category: "mobile" }, function(err, docs) {
+      for (var i = docs.length-1; i > -1; i -= 1) {    
+        resultArrayMobile.push(docs[i]);
+      }
+      for (var i = 0; i < resultArrayMobile.length; i += 3) {    
+        rev_resultArrayMobile.push(resultArrayMobile.slice(i,i+3));
+        break;
+      }
+    });
+  })
+  .then(()=>{
+    product.find({ category: "camera" }, function(err, docs) {
+      for (var i = docs.length-1; i > -1; i -= 1) {    
+        resultArrayCamera.push(docs[i]);
+      }
+      for (var i = 0; i < resultArrayCamera.length; i += 3) {    
+        rev_resultArrayCamera.push(resultArrayCamera.slice(i,i+3));
+        break;
+      }
+    });
+  })
+  .then(()=>{
+    res.render("home", {
+      title: "general",
+      productsLaptops: rev_resultArrayLaptop,
+      productsMobiles: rev_resultArrayMobile,
+      productsCameras: rev_resultArrayCamera
+    });
+  })
 });
 
 router.get("/add-to-cart/:id", function(req, res, next) {
