@@ -15,7 +15,6 @@ var mongoStore = require('connect-mongo')(session);
 const app = express();
 
 // Load routes controller
-const ideasController = require("./routes/ideasController");
 const usersController = require("./routes/usersController");
 const productsController = require("./routes/productsController");
 var general = require('./routes/general.routes');

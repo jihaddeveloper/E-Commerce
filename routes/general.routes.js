@@ -19,7 +19,7 @@ router.get("/home", function(req, res, next) {
   rev_resultArrayPinned = [];
 
   //gets three latest uploaded laptop  
-  product.find({ category: "laptop" }, function(err, docs) {
+  product.find({ category: "laptop", home: "true" }, function(err, docs) {
     for (var i = docs.length-1; i > -1; i -= 1) {    
       resultArrayLaptop.push(docs[i]);
     }
@@ -42,7 +42,7 @@ router.get("/home", function(req, res, next) {
   })
   .then(()=>{
     //gets three latest uploaded mobile 
-    product.find({ category: "mobile" }, function(err, docs) {
+    product.find({ category: "mobile",  home: "true" }, function(err, docs) {
       for (var i = docs.length-1; i > -1; i -= 1) {    
         resultArrayMobile.push(docs[i]);
       }
@@ -54,7 +54,7 @@ router.get("/home", function(req, res, next) {
   })
   .then(()=>{
     //gets three latest uploaded camera 
-    product.find({ category: "camera" }, function(err, docs) {
+    product.find({ category: "camera", home: "true" }, function(err, docs) {
       for (var i = docs.length-1; i > -1; i -= 1) {    
         resultArrayCamera.push(docs[i]);
       }
@@ -163,7 +163,6 @@ router.get("/FilteredByCategory/:category", function(req, res, next) {
     for (var i = 0; i < resultArray.length; i += 3) {    
       rev_resultArray.push(resultArray.slice(i,i+3));
     }
-
 
     res.render("categoryWise", {
       title: "general",

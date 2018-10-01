@@ -2,6 +2,7 @@
 const express = require("express");
 const router = express.Router();
 const {ensureAuthenticated} = require("../helpers/auth");
+var mongo = require('mongodb');
 
 
 var multer = require('multer');
@@ -92,4 +93,118 @@ router.get('/category/:category',function(req,res,next){
  
  });
 
+ // saving data in product schema
+router.get('/view',function(req,res,next){
+    resultArray=[];
+    Product.find(function(err,docs){
+        for(var i = docs.length-1; i > -1; i -= 1){
+            resultArray.push(docs[i]);
+        }
+
+        res.render('allProductView', {title: 'general', products: resultArray});
+    });
+ 
+ });
+
+ // pin the product to top 
+router.get('/pin/:id',function(req,res,next){
+    console.log(req.params.id);
+    Product.update({"_id":mongo.ObjectID (req.params.id)}, {
+        $set:{ "pinned":"true" }
+    }, function(err, bear) {
+        if (err) {
+            res.send(err);
+        }
+        else {
+            res.redirect('/products/view');
+        }
+    });
+ 
+ });
+
+ // unpin the product to top 
+router.get('/unpin/:id',function(req,res,next){
+    console.log(req.params.id);
+    Product.update({"_id":mongo.ObjectID (req.params.id)}, {
+        $set:{ "pinned":"" }
+    }, function(err, bear) {
+        if (err) {
+            res.send(err);
+        }
+        else {
+            res.redirect('/products/view');
+        }
+    });
+ 
+ });
+
+ 
+ // Add to home page 
+router.get('/home/:id',function(req,res,next){
+    console.log(req.params.id);
+    Product.update({"_id":mongo.ObjectID (req.params.id)}, {
+        $set:{ "home":"true" }
+    }, function(err, bear) {
+        if (err) {
+            res.send(err);
+        }
+        else {
+            res.redirect('/products/view');
+        }
+    });
+ 
+ });
+ 
+// remove from home page 
+router.get('/unhome/:id',function(req,res,next){
+    console.log(req.params.id);
+    Product.update({"_id":mongo.ObjectID (req.params.id)}, {
+        $set:{ "home":"" }
+    }, function(err, bear) {
+        if (err) {
+            res.send(err);
+        }
+        else {
+            res.redirect('/products/view');
+        }
+    });
+ 
+ });
+
+ // delete product
+router.get('/delete/:id',function(req,res,next){
+    
+    Product.deleteOne({"_id":mongo.ObjectID (req.params.id)}, function(err, bear) {
+        if (err) {
+            res.send(err);
+        }
+        else {
+            res.redirect('/products/view');
+        }
+    });
+ 
+ });
+
+//  // search
+// router.post('/search',function(req,res,next){
+//     var txt=req.body.key_text;
+//     console.log(txt);
+//     var resultArray = [];
+//     var c=0;
+//     Product.find({ category:  txt  }, function(err, docs) {
+//         console.log(typeof(docs));
+//         for (var i = docs.length-1; i > -1; i -= 1) {    
+//           resultArray.push(docs[i]); 
+//           c++;
+//         }
+//     console.log(c);
+//     //     for (var i = 0; i < resultArrayMobile.length; i += 3) {    
+//     //       rev_resultArrayMobile.push(resultArrayMobile.slice(i,i+3));
+//     //       break;
+//     //     }
+//       });
+ 
+//  });
+
 module.exports = router;
+
