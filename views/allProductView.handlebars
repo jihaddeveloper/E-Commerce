@@ -1,0 +1,71 @@
+<div class="container-fluid" style="width:100%;min-height: 700px">
+    
+    {{# if products}}
+    <div class="row">
+        <div class="col-sm-12 col-md-6 col-md-offset-3 col-sm-offset-3">
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-md-2 ">
+                            <strong>Image</strong>
+                        </div>
+                        <div class="col-md-2 ">
+                            <strong>Title</strong>
+                        </div>
+                        <div class="col-md-2 ">
+                            <strong>Category</strong>
+                        </div>
+                        <div class="col-md-2 ">
+                            <strong>Price</strong>
+                        </div>
+                        <div class="col-md-4 pull-center">
+                            <strong>Action</strong>
+                        </div>
+                    </div>
+                </li>
+                {{# each products}}
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-md-2 ">
+                            <img style="height: 50px" class="img-responsive" src="{{ this.imagePath }}" alt="{{ this.title}}">
+                        </div>
+                        <div class="col-md-2 ">
+                            <strong>{{this.title}}</strong>
+                        </div>
+                        <div class="col-md-2 ">
+                            <strong>{{this.category}}</strong>
+
+                        </div>
+                        <div class="col-md-2 ">
+                            <strong>{{this.price}}TK</strong>
+                        </div>
+                        <div class="col-md-4 ">
+                            {{# if this.pinned }}
+                            <a href="/products/unpin/{{this._id}}"> <button class="btn btn-primary " type="button">pinned</button></a>
+                            {{else}}
+                            <a href="/products/pin/{{this._id}}"> <button class="btn btn-default " type="button">pin
+                                    top</button></a>
+                            {{/if}}
+                            {{# if this.home }}
+                            <a href="/products/unhome/{{this._id}}"> <button class="btn btn-primary " type="button">home</button></a>
+                            {{else}}
+                            <a href="/products/home/{{this._id}}"> <button class="btn btn-default " type="button">home</button></a>
+                            {{/if}}
+                            <a href="/removeAll/{{this._id}}"> <button class="btn btn-default " type="button">Edit</button></a>
+                            <a href="/products/delete/{{this._id}}"> <button class="btn btn-default " type="button">Delete</button></a>
+                        </div>
+                    </div>
+                </li>
+                {{/each }}
+
+            </ul>
+        </div>
+    </div>
+    {{ else }}
+    <div class="row">
+        <div class="col-sm-6 col-md-6 col-md-offset-3 col-sm-offset-3">
+            <h2 id="search-result" onclick="searchPartial()">No Item in found</h2>
+        </div>
+    </div>
+    {{/if}}
+</div>

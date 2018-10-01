@@ -15,7 +15,6 @@ var mongoStore = require('connect-mongo')(session);
 const app = express();
 
 // Load routes controller
-const ideasController = require("./routes/ideasController");
 const usersController = require("./routes/usersController");
 const productsController = require("./routes/productsController");
 var general = require('./routes/general.routes');
@@ -88,14 +87,15 @@ app.listen(port, () => {
 });
 
 
-//All Routes
-// Index route
+
 app.get("/", (req, res) => {
+
   res.redirect('/products/home');
   // const title = "Welcome To ECL E-Commerce";
   // res.render("home", {
   //   title: title
   // });
+
 });
 
 
@@ -106,7 +106,6 @@ app.get("/about", (req, res) => {
 
 // Use routes
 app.use('', general);
-
 app.use("/users", usersController);
 app.use("/products", productsController);
 
