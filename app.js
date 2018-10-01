@@ -1,5 +1,5 @@
 const express = require("express");
-const exphbs = require("express-handlebars");
+const handlebars = require("express-handlebars");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const methodOverride = require("method-override");
@@ -37,7 +37,7 @@ mongoose.connect(dbConfig.mongoURI, (err) =>{
 app.use(morgan('dev'));//Morgan to see Routes in shell/command/bash. 
 
 // Handlebars middleware
-app.engine("handlebars", exphbs({ defaultLayout: "main" }));
+app.engine("handlebars", handlebars({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
 // Body parser middleware
@@ -89,7 +89,13 @@ app.listen(port, () => {
 
 
 app.get("/", (req, res) => {
-  res.redirect('/home');
+
+  res.redirect('/products/home');
+  // const title = "Welcome To ECL E-Commerce";
+  // res.render("home", {
+  //   title: title
+  // });
+
 });
 
 

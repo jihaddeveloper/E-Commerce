@@ -7,73 +7,59 @@ var Cart = require("../models/cart.model");
 
 
 
-// returns home page 
-router.get("/home", function(req, res, next) {
-  resultArrayLaptop = [];
-  resultArrayMobile = [];
-  resultArrayCamera = [];
-  resultArrayPinned = [];
-  rev_resultArrayLaptop = [];
-  rev_resultArrayMobile = [];
-  rev_resultArrayCamera = [];
-  rev_resultArrayPinned = [];
 
-  //gets three latest uploaded laptop  
-  product.find({ category: "laptop", home: "true" }, function(err, docs) {
-    for (var i = docs.length-1; i > -1; i -= 1) {    
-      resultArrayLaptop.push(docs[i]);
-    }
-    for (var i = 0; i < resultArrayLaptop.length; i += 3) {    
-      rev_resultArrayLaptop.push(resultArrayLaptop.slice(i,i+3));
-      break;
-    }
-  })
-  .then(()=>{
-    //gets three latest uploaded mobile 
-    product.find({ pinned: "true" }, function(err, docs) {
-      for (var i = docs.length-1; i > -1; i -= 1) {    
-        resultArrayPinned.push(docs[i]);
-      }
-      for (var i = 0; i < resultArrayPinned.length; i += 3) {    
-        rev_resultArrayPinned.push(resultArrayPinned.slice(i,i+3));
-        break;
-      }
-    });
-  })
-  .then(()=>{
-    //gets three latest uploaded mobile 
-    product.find({ category: "mobile",  home: "true" }, function(err, docs) {
-      for (var i = docs.length-1; i > -1; i -= 1) {    
-        resultArrayMobile.push(docs[i]);
-      }
-      for (var i = 0; i < resultArrayMobile.length; i += 3) {    
-        rev_resultArrayMobile.push(resultArrayMobile.slice(i,i+3));
-        break;
-      }
-    });
-  })
-  .then(()=>{
-    //gets three latest uploaded camera 
-    product.find({ category: "camera", home: "true" }, function(err, docs) {
-      for (var i = docs.length-1; i > -1; i -= 1) {    
-        resultArrayCamera.push(docs[i]);
-      }
-      for (var i = 0; i < resultArrayCamera.length; i += 3) {    
-        rev_resultArrayCamera.push(resultArrayCamera.slice(i,i+3));
-        break;
-      }
-    });
-  })
-  .then(()=>{
-    res.render("home", {
-      title: "general",
-      productsPinned: rev_resultArrayPinned,
-      productsLaptops: rev_resultArrayLaptop,
-      productsMobiles: rev_resultArrayMobile,
-      productsCameras: rev_resultArrayCamera
-    });
-  })
-});
+// // returns home page 
+// router.get("/home", function(req, res, next) {
+//   resultArrayLaptop = [];
+//   resultArrayMobile = [];
+//   resultArrayCamera = [];
+//   rev_resultArrayLaptop = [];
+//   rev_resultArrayMobile = [];
+//   rev_resultArrayCamera = [];
+
+
+  
+//   product.find({ category: "laptop" }, function(err, docs) {
+//     for (var i = docs.length-1; i > -1; i -= 1) {    
+//       resultArrayLaptop.push(docs[i]);
+//     }
+//     for (var i = 0; i < resultArrayLaptop.length; i += 3) {    
+//       rev_resultArrayLaptop.push(resultArrayLaptop.slice(i,i+3));
+//       break;
+//     }
+//   })
+//   .then(()=>{
+//     product.find({ category: "mobile" }, function(err, docs) {
+//       for (var i = docs.length-1; i > -1; i -= 1) {    
+//         resultArrayMobile.push(docs[i]);
+//       }
+//       for (var i = 0; i < resultArrayMobile.length; i += 3) {    
+//         rev_resultArrayMobile.push(resultArrayMobile.slice(i,i+3));
+//         break;
+//       }
+//     });
+//   })
+//   .then(()=>{
+//     product.find({ category: "camera" }, function(err, docs) {
+//       for (var i = docs.length-1; i > -1; i -= 1) {    
+//         resultArrayCamera.push(docs[i]);
+//       }
+//       for (var i = 0; i < resultArrayCamera.length; i += 3) {    
+//         rev_resultArrayCamera.push(resultArrayCamera.slice(i,i+3));
+//         break;
+//       }
+//     });
+//   })
+//   .then(()=>{
+//     res.render("home", {
+//       title: "general",
+//       productsLaptops: rev_resultArrayLaptop,
+//       productsMobiles: rev_resultArrayMobile,
+//       productsCameras: rev_resultArrayCamera
+//     });
+//   })
+// });
+
 
 // Adding product to the cart
 router.post("/add-to-cart/:id", function(req, res, next) {
