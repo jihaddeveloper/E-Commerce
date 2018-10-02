@@ -121,7 +121,7 @@ router.post("/registerSave", ensureAuthenticated, upload.single('imagePath'), (r
             category: req.body.category,
             price: req.body.price,
             description: req.body.description,
-            imagePath: req.file.originalname,
+            imagePath: req.file,
             user: req.user.id,
             pinned: "",
             home:""
@@ -136,14 +136,15 @@ router.post("/registerSave", ensureAuthenticated, upload.single('imagePath'), (r
 // Fetching by category data in product schema
 router.get('/category/:category',function(req,res,next){
     resultArray=[];
+    
     Product.find({category: req.params.category},function(err,docs){
         for(var i=0; i< docs.length; i+=3){
             resultArray.push(docs.slice(i,i+3));
         }
- 
+        console.log(resultArray.length);
         res.render('categoryWise', {title: 'general',category:req.params.category, products: resultArray});
     });
- 
+    
  });
 
  // saving data in product schema
