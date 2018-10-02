@@ -122,7 +122,9 @@ router.post("/registerSave", ensureAuthenticated, upload.single('imagePath'), (r
             price: req.body.price,
             description: req.body.description,
             imagePath: req.file.originalname,
-            user: req.user.id
+            user: req.user.id,
+            pinned: "",
+            home:""
         };
         new Product(newProduct).save().then(product => {
             req.flash("success_msg", "Product added.");
@@ -265,9 +267,11 @@ router.get("/home", function(req, res, next) {
     resultArrayLaptop = [];
     resultArrayMobile = [];
     resultArrayCamera = [];
+    resultArrayPinned = [];
     rev_resultArrayLaptop = [];
     rev_resultArrayMobile = [];
     rev_resultArrayCamera = [];
+    rev_resultArrayPinned = [];
   
   
     //To fetch image
@@ -275,7 +279,7 @@ router.get("/home", function(req, res, next) {
 
     
     
-    Product.find({ category: "laptop" }, function(err, docs) {
+    Product.find({ category: "laptop", home: "true" }, function(err, docs) {
       for (var i = docs.length-1; i > -1; i -= 1) {    
         resultArrayLaptop.push(docs[i]);
       }
@@ -285,7 +289,18 @@ router.get("/home", function(req, res, next) {
       }
     })
     .then(()=>{
-        Product.find({ category: "mobile" }, function(err, docs) {
+        Product.find({ pinned: "true" }, function(err, docs) {
+        for (var i = docs.length-1; i > -1; i -= 1) {    
+            resultArrayPinned.push(docs[i]);
+        }
+        for (var i = 0; i < resultArrayPinned.length; i += 3) {    
+            rev_resultArrayPinned.push(resultArrayPinned.slice(i,i+3));
+            break;
+          }
+      });
+    })
+    .then(()=>{
+        Product.find({ category: "mobile", home: "true" }, function(err, docs) {
         for (var i = docs.length-1; i > -1; i -= 1) {    
           resultArrayMobile.push(docs[i]);
         }
@@ -296,7 +311,7 @@ router.get("/home", function(req, res, next) {
       });
     })
     .then(()=>{
-        Product.find({ category: "camera" }, function(err, docs) {
+        Product.find({ category: "camera" , home: "true"}, function(err, docs) {
         for (var i = docs.length-1; i > -1; i -= 1) {    
           resultArrayCamera.push(docs[i]);
         }
@@ -309,6 +324,7 @@ router.get("/home", function(req, res, next) {
     .then(()=>{
       res.render("home", {
         title: "general",
+        productsPinned: rev_resultArrayPinned,
         productsLaptops: rev_resultArrayLaptop,
         productsMobiles: rev_resultArrayMobile,
         productsCameras: rev_resultArrayCamera
