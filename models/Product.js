@@ -9,8 +9,8 @@ const productSchema = new Schema({
   description: { type: String, required: true },
   imagePath:{type: String,required:true},
   user: { type: String, required: true},
-  pinned:{ type:String, required: true},
-  home:{ type:String, required: true}
+  pinned:{ type:String, required: false},
+  home:{ type:String, required: false}
   
  
 });
