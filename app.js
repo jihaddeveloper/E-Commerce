@@ -35,7 +35,9 @@ mongoose.connect(dbConfig.mongoURI, (err) =>{
 
 //Dev tools
 app.use(morgan('dev'));//Morgan to see Routes in shell/command/bash. 
-
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 // Handlebars middleware
 app.engine("handlebars", handlebars({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");

@@ -1,5 +1,6 @@
 
 <div class="container-fluid" style="width:80%;min-height: 700px">
+    {{# if products}}
     <h1 style="margin-left: auto; margin-right: auto; ">{{category}}</a></h1>
     <div class="row">
         {{!-- Filter option shows --}}
@@ -50,8 +51,6 @@
 
         {{!-- products shows --}}
         <div class="col-sm-9 ">
-
-
             {{# each products }}
             <div class="row">
 
@@ -72,9 +71,13 @@
                 {{/each}}
             </div>
             {{/each}}
-
-
         </div>
-
     </div>
+     {{ else }}
+    <div class="row">
+        <div class="col-sm-6 col-md-6 col-md-offset-3 col-sm-offset-3">
+            <h2 id="search-result" onclick="searchPartial()">No Item in found</h2>
+        </div>
+    </div>
+    {{/if}}
 </div>
