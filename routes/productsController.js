@@ -52,7 +52,6 @@ const storage = new GridFsStorage({
 
 const upload = multer({ storage });
 
-
 //Product register form
 router.get("/register", ensureAuthenticated, (req, res) => {
   res.render("products/register");
@@ -233,7 +232,7 @@ router.post("/search", function(req, res, next) {
   var txt = req.body.key_text;
   var resultArray = [];
 
-  Product.find({ category: txt.toLowerCase() }, function(err, docs) {
+  Product.find({$or:[{ category: txt.toLowerCase() },{ title: txt.toLowerCase() }]}, function(err, docs) {
     for (var i = 0; i < docs.length; i += 3) {
       resultArray.push(docs.slice(i, i + 3));
     }
@@ -242,17 +241,6 @@ router.post("/search", function(req, res, next) {
         title: "general",
         category: req.params.category,
         products: resultArray
-      });
-    } else {
-      Product.find({ title: txt.toLowerCase() }, function(err, docs) {
-        for (var i = 0; i < docs.length; i += 3) {
-          resultArray.push(docs.slice(i, i + 3));
-        }
-        res.render("categoryWise", {
-          title: "general",
-          category: req.params.category,
-          products: resultArray
-        });
       });
     }
   });
