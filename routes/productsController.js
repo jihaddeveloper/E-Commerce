@@ -141,7 +141,7 @@ router.get('/category/:category',function(req,res,next){
             resultArray.push(docs.slice(i,i+3));
         }
  
-        res.render('index', {title: 'general',category:req.params.category, products: resultArray});
+        res.render('categoryWise', {title: 'general',category:req.params.category, products: resultArray});
     });
  
  });
