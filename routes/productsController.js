@@ -8,53 +8,73 @@ var mongo = require("mongodb");
 const multer = require("multer");
 const Product = require("../models/Product");
 
-//Image save to DB Start
-const mongoose = require("mongoose");
-const GridFsStorage = require("multer-gridfs-storage");
-const Grid = require("gridfs-stream");
-const methodOverride = require("method-override");
-const path = require("path");
-const crypto = require("crypto");
+// //Image save to DB Start
+// const mongoose = require("mongoose");
+// const GridFsStorage = require("multer-gridfs-storage");
+// const Grid = require("gridfs-stream");
+// const methodOverride = require("method-override");
+// const path = require("path");
+// const crypto = require("crypto");
 
-const mongoURI = "mongodb://localhost:27017/e-commerce_db";
+// const mongoURI = "mongodb://localhost:27017/e-commerce_db";
 
-//Mongo connection
-const conn = mongoose.createConnection(mongoURI);
+// //Mongo connection
+// const conn = mongoose.createConnection(mongoURI);
 
-//Init gfs
-let gfs;
+// //Init gfs
+// let gfs;
 
-//Init Stream
-conn.once("open", () => {
-  gfs = Grid(conn.db, mongoose.mongo);
-  gfs.collection("products");
+// //Init Stream
+// conn.once("open", () => {
+//   gfs = Grid(conn.db, mongoose.mongo);
+//   gfs.collection("products");
+// });
+
+// //Storage Engine
+// const storage = new GridFsStorage({
+//   url: mongoURI,
+//   file: (req, file) => {
+//     return new Promise((resolve, reject) => {
+//       crypto.randomBytes(16, (err, buf) => {
+//         if (err) {
+//           return reject(err);
+//         }
+//         const filename = buf.toString("hex") + path.extname(file.originalname);
+//         const fileInfo = {
+//           filename: filename,
+//           bucketName: "products"
+//         };
+//         resolve(fileInfo);
+//       });
+//     });
+//   }
+// });
+
+// const upload = multer({ storage });
+// //Images Save to DB end
+
+
+
+
+//Image Path save start
+const storage = multer.diskStorage({
+    destination: function(req, file, cb){
+        cb(null, './public/images/');
+    },
+    filename: function(req, file, cb){
+        cb(null, file.originalname);
+    }
 });
 
-//Storage Engine
-const storage = new GridFsStorage({
-  url: mongoURI,
-  file: (req, file) => {
-    return new Promise((resolve, reject) => {
-      crypto.randomBytes(16, (err, buf) => {
-        if (err) {
-          return reject(err);
-        }
-        const filename = buf.toString("hex") + path.extname(file.originalname);
-        const fileInfo = {
-          filename: filename,
-          bucketName: "products"
-        };
-        resolve(fileInfo);
-      });
-    });
-  }
-});
+const upload = multer({storage: storage});
+//Image Path save end
 
-const upload = multer({ storage });
+
 
 //Product register form
 router.get("/register", ensureAuthenticated, (req, res) => {
-  res.render("products/register");
+
+  res.render("products/register", );
 });
 
 //Product register process
@@ -99,49 +119,39 @@ router.post(
         imagePath: req.body.imagePath
       });
     } else {
-
-        const newProduct = {
-            title: req.body.title,
-            category: req.body.category,
-            price: req.body.price,
-            description: req.body.description,
-            imagePath: req.file,
-            user: req.user.id,
-            pinned: "",
-            home:""
-        };
-        new Product(newProduct).save().then(product => {
-            req.flash("success_msg", "Product added.");
-            res.redirect("/products/home");
-        });
-
+      const newProduct = {
+        title: req.body.title,
+        category: req.body.category,
+        price: req.body.price,
+        description: req.body.description,
+        imagePath: '/images/'+req.file.originalname,
+        //imagePath: req.file,
+        user: req.user.id,
+        pinned: "",
+        home:""
+      };
+      new Product(newProduct).save().then(product => {
+        req.flash("success_msg", "Product added.");
+        res.redirect("/products/view");
+      });
     }
   }
 );
 
 // Fetching by category data in product schema
-
-router.get('/category/:category',function(req,res,next){
-    resultArray=[];
-    
-    Product.find({category: req.params.category},function(err,docs){
-        for(var i=0; i< docs.length; i+=3){
-            resultArray.push(docs.slice(i,i+3));
-        }
-        console.log(resultArray.length);
-        res.render('categoryWise', {title: 'general',category:req.params.category, products: resultArray});
+router.get("/FilteredByCategory/:category", function(req, res, next) {
+  resultArray = [];
+  Product.find({ category: req.params.category }, function(err, docs) {
+    for (var i = 0; i < docs.length; i += 3) {
+      resultArray.push(docs.slice(i, i + 3));
+    }
+    res.render("categoryWise", {
+      title: "general",
+      category: req.params.category,
+      products: resultArray
     });
-    
- });
-
- // saving data in product schema
-router.get('/view',function(req,res,next){
-    resultArray=[];
-    Product.find(function(err,docs){
-        for(var i = docs.length-1; i > -1; i -= 1){
-            resultArray.push(docs[i]);
-        }
-
+  });
+});
 
 // saving data in product schema
 router.get("/view", function(req, res, next) {
@@ -249,13 +259,13 @@ router.post("/search", function(req, res, next) {
     for (var i = 0; i < docs.length; i += 3) {
       resultArray.push(docs.slice(i, i + 3));
     }
-    if (resultArray.length > 0) {
+    
       res.render("categoryWise", {
         title: "general",
         category: req.params.category,
         products: resultArray
       });
-    }
+  
   });
 });
 
@@ -321,4 +331,4 @@ router.get("/home", function(req, res, next) {
     });
 });
 
-module.exports = router;
+module.exports = router ;
