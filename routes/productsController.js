@@ -54,7 +54,8 @@ const upload = multer({ storage });
 
 //Product register form
 router.get("/register", ensureAuthenticated, (req, res) => {
-  res.render("products/register");
+
+  res.render("products/register", );
 });
 
 //Product register process
@@ -99,49 +100,36 @@ router.post(
         imagePath: req.body.imagePath
       });
     } else {
-
-        const newProduct = {
-            title: req.body.title,
-            category: req.body.category,
-            price: req.body.price,
-            description: req.body.description,
-            imagePath: req.file,
-            user: req.user.id,
-            pinned: "",
-            home:""
-        };
-        new Product(newProduct).save().then(product => {
-            req.flash("success_msg", "Product added.");
-            res.redirect("/products/home");
-        });
-
+      const newProduct = {
+        title: req.body.title,
+        category: req.body.category,
+        price: req.body.price,
+        description: req.body.description,
+        imagePath: req.file.originalname,
+        user: req.user.id
+      };
+      new Product(newProduct).save().then(product => {
+        req.flash("success_msg", "Product added.");
+        res.redirect("/products/home");
+      });
     }
   }
 );
 
 // Fetching by category data in product schema
-
-router.get('/category/:category',function(req,res,next){
-    resultArray=[];
-    
-    Product.find({category: req.params.category},function(err,docs){
-        for(var i=0; i< docs.length; i+=3){
-            resultArray.push(docs.slice(i,i+3));
-        }
-        console.log(resultArray.length);
-        res.render('categoryWise', {title: 'general',category:req.params.category, products: resultArray});
+router.get("/category/:category", function(req, res, next) {
+  resultArray = [];
+  Product.find({ category: req.params.category }, function(err, docs) {
+    for (var i = 0; i < docs.length; i += 3) {
+      resultArray.push(docs.slice(i, i + 3));
+    }
+    res.render("categoryWise", {
+      title: "general",
+      category: req.params.category,
+      products: resultArray
     });
-    
- });
-
- // saving data in product schema
-router.get('/view',function(req,res,next){
-    resultArray=[];
-    Product.find(function(err,docs){
-        for(var i = docs.length-1; i > -1; i -= 1){
-            resultArray.push(docs[i]);
-        }
-
+  });
+});
 
 // saving data in product schema
 router.get("/view", function(req, res, next) {
@@ -249,13 +237,13 @@ router.post("/search", function(req, res, next) {
     for (var i = 0; i < docs.length; i += 3) {
       resultArray.push(docs.slice(i, i + 3));
     }
-    if (resultArray.length > 0) {
+    
       res.render("categoryWise", {
         title: "general",
         category: req.params.category,
         products: resultArray
       });
-    }
+  
   });
 });
 
@@ -321,4 +309,4 @@ router.get("/home", function(req, res, next) {
     });
 });
 
-module.exports = router;
+module.exports = router ;

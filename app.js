@@ -2,7 +2,7 @@ const express = require("express");
 const handlebars = require("express-handlebars");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-const methodOverride = require("method-override");
+
 const flash = require("connect-flash");
 const session = require("express-session");
 const passport = require("passport");
@@ -10,6 +10,7 @@ const dbConfig = require('./config/database');
 const morgan = require('morgan');
 var path = require('path');
 var mongoStore = require('connect-mongo')(session);
+const methodOverride = require("method-override");
 
 
 const app = express();
@@ -38,6 +39,7 @@ app.use(morgan('dev'));//Morgan to see Routes in shell/command/bash.
 app.use(bodyParser.urlencoded({
   extended: true
 }));
+app.use(methodOverride('_method'));
 // Handlebars middleware
 app.engine("handlebars", handlebars({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
@@ -48,9 +50,6 @@ app.use(bodyParser.json());
 
 //Static Folder
 app.use(express.static(path.join(__dirname, 'public')));
-
-// Method overriding middleware
-app.use(methodOverride("_method"));
 
 // Express session middleware
 app.use(session({
