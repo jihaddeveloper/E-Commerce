@@ -1,3 +1,4 @@
+
 //Imports
 const express = require("express");
 const router = express.Router();
@@ -8,27 +9,39 @@ var mongo = require("mongodb");
 const multer = require("multer");
 const Product = require("../models/Product");
 
-// //Image save to DB Start
-// const mongoose = require("mongoose");
-// const GridFsStorage = require("multer-gridfs-storage");
-// const Grid = require("gridfs-stream");
-// const methodOverride = require("method-override");
-// const path = require("path");
-// const crypto = require("crypto");
+//Image save to DB Start
+const mongoose = require("mongoose");
+const GridFsStorage = require("multer-gridfs-storage");
+const Grid = require("gridfs-stream");
+const path = require("path");
+const crypto = require("crypto");
 
-// const mongoURI = "mongodb://localhost:27017/e-commerce_db";
+const mongoURI = "mongodb://localhost:27017/e-commerce_db";
 
-// //Mongo connection
-// const conn = mongoose.createConnection(mongoURI);
+//Mongo connection
+const conn = mongoose.createConnection(mongoURI);
 
-// //Init gfs
-// let gfs;
+//Init gfs
+let gfs;
 
-// //Init Stream
-// conn.once("open", () => {
-//   gfs = Grid(conn.db, mongoose.mongo);
-//   gfs.collection("products");
-// });
+//Init Stream
+conn.once("open", () => {
+  gfs = Grid(conn.db, mongoose.mongo);
+  gfs.collection("products");
+});
+//Image Path save start
+const storage = multer.diskStorage({
+    destination: function(req, file, cb){
+        cb(null, './public/images/');
+    },
+    filename: function(req, file, cb){
+        cb(null, file.originalname);
+    }
+});
+
+
+const upload = multer({storage: storage});
+//Image Path save end
 
 // //Storage Engine
 // const storage = new GridFsStorage({
@@ -50,40 +63,30 @@ const Product = require("../models/Product");
 //   }
 // });
 
-// const upload = multer({ storage });
-// //Images Save to DB end
-
-
-
-
-//Image Path save start
-const storage = multer.diskStorage({
-    destination: function(req, file, cb){
-        cb(null, './public/images/');
-    },
-    filename: function(req, file, cb){
-        cb(null, file.originalname);
-    }
-});
-
-const upload = multer({storage: storage});
-//Image Path save end
-
-
+const upload = multer({ storage });
 
 //Product register form
-router.get("/register", ensureAuthenticated, (req, res) => {
-
-  res.render("products/register", );
+router.get("/register/:category", ensureAuthenticated, (req, res) => {
+  var cat = req.params.category;
+  var laptop = false;
+  var mobile = false;
+  var camera = false;
+  if(cat === 'laptop'){
+    laptop = true;
+  }
+  if(cat === 'mobile'){
+    mobile = true;
+  }
+  if(cat === 'camera'){
+    camera = true;
+  }
+  res.render("products/register",{laptop:laptop,mobile:mobile,camera:camera } );
 });
 
 //Product register process
-router.post(
-  "/registerSave",
-  ensureAuthenticated,
-  upload.single("imagePath"),
-  (req, res) => {
+router.post("/registerSave",ensureAuthenticated,upload.single("imagePath"),(req, res) => {
     let errors = [];
+   
 
     if (!req.body.title) {
       errors.push({
@@ -103,11 +106,7 @@ router.post(
       });
     }
 
-    if (!req.body.description) {
-      errors.push({
-        text: "Please add some description"
-      });
-    }
+   
 
     if (errors.length > 0) {
       res.render("products/register", {
@@ -115,31 +114,56 @@ router.post(
         title: req.body.title,
         category: req.body.category,
         price: req.body.price,
-        description: req.body.description,
-        imagePath: req.body.imagePath
+        // imagePath: req.body.imagePath
       });
     } else {
       const newProduct = {
         title: req.body.title,
         category: req.body.category,
         price: req.body.price,
-        description: req.body.description,
-        imagePath: '/images/'+req.file.originalname,
-        //imagePath: req.file,
+        imagePath: ",,,,,,,,ghfgdh",
+        // "/images/"+ req.file.originalname,
         user: req.user.id,
-        pinned: "",
-        home:""
+        brand:req.body.brand,
+        model:req.body.model,
+
+        // laptop
+        precessor:req.body.precessor,
+        clockSpeed:req.body.clockSpeed,
+        cache:req.body.cache,
+        displayType:req.body.displayType,
+        displayResolution:req.body.displayResolution,
+        touch:req.body.touch,
+        RAM_type:req.body.RAM_type,
+        RAM:req.body.RAM,
+        storage:req.body.storage,
+        graphicsChipset:req.body.graphicsChipset,
+        graphicsMemory:req.body.graphicsMemory,
+        opticalDevice:req.body.opticalDevice,
+        networking:req.body.networking,
+        displayPort:req.body.displayPort,
+        audioPort:req.body.audioPort,
+        USB_Port:req.body.USB_Port,
+        battery:req.body.battery,
+        weight:req.body.weight,
+        color:req.body.color,
+        operatingSystem:req.body.operatingSystem,
+        others:req.body.others,
+        partNo:req.body.partNo,
+        warranty:req.body.warranty,
+        generation:req.body.generation,
+        displaySize:req.body.displaySize
       };
       new Product(newProduct).save().then(product => {
         req.flash("success_msg", "Product added.");
-        res.redirect("/products/view");
+        res.redirect("/products/home");
       });
     }
   }
 );
 
 // Fetching by category data in product schema
-router.get("/FilteredByCategory/:category", function(req, res, next) {
+router.get("/category/:category", function(req, res, next) {
   resultArray = [];
   Product.find({ category: req.params.category }, function(err, docs) {
     for (var i = 0; i < docs.length; i += 3) {
@@ -332,3 +356,58 @@ router.get("/home", function(req, res, next) {
 });
 
 module.exports = router ;
+
+
+// //Image save to DB Start
+// const mongoose = require("mongoose");
+// const GridFsStorage = require("multer-gridfs-storage");
+// const Grid = require("gridfs-stream");
+// const methodOverride = require("method-override");
+// const path = require("path");
+// const crypto = require("crypto");
+
+// const mongoURI = "mongodb://localhost:27017/e-commerce_db";
+
+// //Mongo connection
+// const conn = mongoose.createConnection(mongoURI);
+
+// //Init gfs
+// let gfs;
+
+// //Init Stream
+// conn.once("open", () => {
+//   gfs = Grid(conn.db, mongoose.mongo);
+//   gfs.collection("products");
+// });
+
+// //Storage Engine
+// const storage = new GridFsStorage({
+//   url: mongoURI,
+//   file: (req, file) => {
+//     return new Promise((resolve, reject) => {
+//       crypto.randomBytes(16, (err, buf) => {
+//         if (err) {
+//           return reject(err);
+//         }
+//         const filename = buf.toString("hex") + path.extname(file.originalname);
+//         const fileInfo = {
+//           filename: filename,
+//           bucketName: "products"
+//         };
+//         resolve(fileInfo);
+//       });
+//     });
+//   }
+// });
+
+// const upload = multer({ storage });
+// //Images Save to DB end
+
+
+
+
+
+
+
+
+
