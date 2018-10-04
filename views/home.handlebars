@@ -43,9 +43,9 @@
     </a>
   </div>
   <hr>
-<h1>
 
-  
+
+   <h3><a href="/products/category/mobile" style="text-decoration: none">Exclusive Products</a></h3>
 
   {{# each productsPinned }}
 
@@ -53,6 +53,7 @@
     {{# each this}}
     <div class="col-sm-6 col-md-4">
       <div class="thumbnail" style="height: 370px;background-color: #efe0ae">
+        
        
           <a href="/singleProduct/{{ this._id }}"><img style="height: 260px" class="img-responsive" src="{{ this.imagePath }}" alt="{{ this.title}}"></a>
        
@@ -72,8 +73,8 @@
 
   <hr>
 
-  <h1><a href="FilteredByCategory/laptop" style="text-decoration: none">Latest Laptops</a></h1>
-
+  
+  <h3><a href="/products/category/laptop" style="text-decoration: none"> Laptops</a></h3>
   {{# each productsLaptops }}
 
   <div class="row ">
@@ -99,7 +100,7 @@
 
   <hr>
 
-  <h1><a href="FilteredByCategory/mobile" style="text-decoration: none">Latest Mobiles</a> </h1>
+  <h3><a href="/products/category/mobile" style="text-decoration: none">Mobiles</a></h3>
 
   {{# each productsMobiles }}
 
@@ -131,7 +132,7 @@
   <hr>
 
 
-  <h1><a href="FilteredByCategory/camera" style="text-decoration: none">Latest Cameras</a></h1>
+  <h3><a href="/products/category/camera" style="text-decoration: none">Cameras</a></h3>
 
   {{# each productsCameras }}
 

@@ -12,7 +12,6 @@ const Product = require("../models/Product");
 const mongoose = require("mongoose");
 const GridFsStorage = require("multer-gridfs-storage");
 const Grid = require("gridfs-stream");
-const methodOverride = require("method-override");
 const path = require("path");
 const crypto = require("crypto");
 
@@ -53,18 +52,27 @@ const storage = new GridFsStorage({
 const upload = multer({ storage });
 
 //Product register form
-router.get("/register", ensureAuthenticated, (req, res) => {
-
-  res.render("products/register", );
+router.get("/register/:category", ensureAuthenticated, (req, res) => {
+  var cat = req.params.category;
+  var laptop = false;
+  var mobile = false;
+  var camera = false;
+  if(cat === 'laptop'){
+    laptop = true;
+  }
+  if(cat === 'mobile'){
+    mobile = true;
+  }
+  if(cat === 'camera'){
+    camera = true;
+  }
+  res.render("products/register",{laptop:laptop,mobile:mobile,camera:camera } );
 });
 
 //Product register process
-router.post(
-  "/registerSave",
-  ensureAuthenticated,
-  upload.single("imagePath"),
-  (req, res) => {
+router.post("/registerSave",ensureAuthenticated,upload.single("imagePath"),(req, res) => {
     let errors = [];
+   
 
     if (!req.body.title) {
       errors.push({
@@ -84,11 +92,7 @@ router.post(
       });
     }
 
-    if (!req.body.description) {
-      errors.push({
-        text: "Please add some description"
-      });
-    }
+   
 
     if (errors.length > 0) {
       res.render("products/register", {
@@ -96,17 +100,45 @@ router.post(
         title: req.body.title,
         category: req.body.category,
         price: req.body.price,
-        description: req.body.description,
-        imagePath: req.body.imagePath
+        // imagePath: req.body.imagePath
       });
     } else {
       const newProduct = {
         title: req.body.title,
         category: req.body.category,
         price: req.body.price,
-        description: req.body.description,
-        imagePath: req.file.originalname,
-        user: req.user.id
+        imagePath: ",,,,,,,,ghfgdh",
+        // "/images/"+ req.file.originalname,
+        user: req.user.id,
+        brand:req.body.brand,
+        model:req.body.model,
+
+        // laptop
+        precessor:req.body.precessor,
+        clockSpeed:req.body.clockSpeed,
+        cache:req.body.cache,
+        displayType:req.body.displayType,
+        displayResolution:req.body.displayResolution,
+        touch:req.body.touch,
+        RAM_type:req.body.RAM_type,
+        RAM:req.body.RAM,
+        storage:req.body.storage,
+        graphicsChipset:req.body.graphicsChipset,
+        graphicsMemory:req.body.graphicsMemory,
+        opticalDevice:req.body.opticalDevice,
+        networking:req.body.networking,
+        displayPort:req.body.displayPort,
+        audioPort:req.body.audioPort,
+        USB_Port:req.body.USB_Port,
+        battery:req.body.battery,
+        weight:req.body.weight,
+        color:req.body.color,
+        operatingSystem:req.body.operatingSystem,
+        others:req.body.others,
+        partNo:req.body.partNo,
+        warranty:req.body.warranty,
+        generation:req.body.generation,
+        displaySize:req.body.displaySize
       };
       new Product(newProduct).save().then(product => {
         req.flash("success_msg", "Product added.");
