@@ -1,3 +1,4 @@
+
 //Imports
 const express = require("express");
 const router = express.Router();
@@ -28,26 +29,39 @@ conn.once("open", () => {
   gfs = Grid(conn.db, mongoose.mongo);
   gfs.collection("products");
 });
-
-//Storage Engine
-const storage = new GridFsStorage({
-  url: mongoURI,
-  file: (req, file) => {
-    return new Promise((resolve, reject) => {
-      crypto.randomBytes(16, (err, buf) => {
-        if (err) {
-          return reject(err);
-        }
-        const filename = buf.toString("hex") + path.extname(file.originalname);
-        const fileInfo = {
-          filename: filename,
-          bucketName: "products"
-        };
-        resolve(fileInfo);
-      });
-    });
-  }
+//Image Path save start
+const storage = multer.diskStorage({
+    destination: function(req, file, cb){
+        cb(null, './public/images/');
+    },
+    filename: function(req, file, cb){
+        cb(null, file.originalname);
+    }
 });
+
+
+const upload = multer({storage: storage});
+//Image Path save end
+
+// //Storage Engine
+// const storage = new GridFsStorage({
+//   url: mongoURI,
+//   file: (req, file) => {
+//     return new Promise((resolve, reject) => {
+//       crypto.randomBytes(16, (err, buf) => {
+//         if (err) {
+//           return reject(err);
+//         }
+//         const filename = buf.toString("hex") + path.extname(file.originalname);
+//         const fileInfo = {
+//           filename: filename,
+//           bucketName: "products"
+//         };
+//         resolve(fileInfo);
+//       });
+//     });
+//   }
+// });
 
 const upload = multer({ storage });
 
@@ -342,3 +356,58 @@ router.get("/home", function(req, res, next) {
 });
 
 module.exports = router ;
+
+
+// //Image save to DB Start
+// const mongoose = require("mongoose");
+// const GridFsStorage = require("multer-gridfs-storage");
+// const Grid = require("gridfs-stream");
+// const methodOverride = require("method-override");
+// const path = require("path");
+// const crypto = require("crypto");
+
+// const mongoURI = "mongodb://localhost:27017/e-commerce_db";
+
+// //Mongo connection
+// const conn = mongoose.createConnection(mongoURI);
+
+// //Init gfs
+// let gfs;
+
+// //Init Stream
+// conn.once("open", () => {
+//   gfs = Grid(conn.db, mongoose.mongo);
+//   gfs.collection("products");
+// });
+
+// //Storage Engine
+// const storage = new GridFsStorage({
+//   url: mongoURI,
+//   file: (req, file) => {
+//     return new Promise((resolve, reject) => {
+//       crypto.randomBytes(16, (err, buf) => {
+//         if (err) {
+//           return reject(err);
+//         }
+//         const filename = buf.toString("hex") + path.extname(file.originalname);
+//         const fileInfo = {
+//           filename: filename,
+//           bucketName: "products"
+//         };
+//         resolve(fileInfo);
+//       });
+//     });
+//   }
+// });
+
+// const upload = multer({ storage });
+// //Images Save to DB end
+
+
+
+
+
+
+
+
+
