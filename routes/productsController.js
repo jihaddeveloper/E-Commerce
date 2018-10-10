@@ -28,27 +28,15 @@ conn.once("open", () => {
   gfs = Grid(conn.db, mongoose.mongo);
   gfs.collection("products");
 });
-
-//Storage Engine
-const storage = new GridFsStorage({
-  url: mongoURI,
-  file: (req, file) => {
-    return new Promise((resolve, reject) => {
-      crypto.randomBytes(16, (err, buf) => {
-        if (err) {
-          return reject(err);
-        }
-        const filename = buf.toString("hex") + path.extname(file.originalname);
-        const fileInfo = {
-          filename: filename,
-          bucketName: "products"
-        };
-        resolve(fileInfo);
-      });
-    });
-  }
+//Image Path save start
+const storage = multer.diskStorage({
+    destination: function(req, file, cb){
+        cb(null, './public/images/');
+    },
+    filename: function(req, file, cb){
+        cb(null, file.originalname);
+    }
 });
-
 const upload = multer({ storage });
 //mobile and camera registration form
 router.get("/reg/:category", ensureAuthenticated, (req, res) => {
@@ -447,6 +435,8 @@ router.get("/category/:category", function (req, res, next) {
     });
   });
 });
+
+
 
 // saving data in product schema
 router.get("/view", function (req, res, next) {
