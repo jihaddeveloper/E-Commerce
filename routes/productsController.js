@@ -215,7 +215,9 @@ router.post("/registerSave/:category", ensureAuthenticated, upload.single("image
     });
   } else {
     var type = req.params.category;
+   
     if (type === "laptop") {
+      console.log(req.params.category);
       var newProduct = {
         title: req.body.title,
         category: req.body.category,
